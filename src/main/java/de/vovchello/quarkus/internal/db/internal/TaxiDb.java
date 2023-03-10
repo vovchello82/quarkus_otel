@@ -1,18 +1,18 @@
 package de.vovchello.quarkus.internal.db.internal;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
-import javax.inject.Singleton;
-
+import javax.enterprise.context.ApplicationScoped;
 import de.vovchello.quarkus.internal.db.api.ReadTaxi;
 import de.vovchello.quarkus.internal.db.api.Taxi;
+import de.vovchello.quarkus.internal.db.api.WriteTaxi;
 
-@Singleton
-class TaxiDb implements ReadTaxi {
-    private Map<String, Taxi> db = new ConcurrentHashMap<>();
+@ApplicationScoped
+class TaxiDb implements ReadTaxi, WriteTaxi {
+    private Map<String, Taxi> db = new HashMap<>();
 
     @Override
     public Optional<Taxi> getTaxiById(String id) {
@@ -26,8 +26,26 @@ class TaxiDb implements ReadTaxi {
     }
 
     @Override
-    public Collection<Taxi> getAllTaxies() {
-        return db.values();
+    public Set<Taxi> getAllTaxies() {
+        return Set.copyOf(db.values());
+    }
+
+    @Override
+    public synchronized void addTaxi(Taxi taxi) {
+        db.putIfAbsent(taxi.id, taxi);
+    }
+
+    @Override
+    public synchronized void updateTaxi(Taxi taxi) {
+        if (db.containsKey(taxi.id)) {
+            db.put(taxi.id, taxi);
+        }
+    }
+
+    @Override
+    public synchronized void deleteTaxiById(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteTaxiById'");
     }
 
 }

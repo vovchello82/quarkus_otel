@@ -1,6 +1,7 @@
 package de.vovchello.quarkus.internal.taxifinder.internal;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
@@ -26,6 +27,11 @@ class TaxiFinderService implements TaxiFinder {
     public Collection<Taxi> findAvailableTaxi() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAvailableTaxi'");
+    }
+
+    @Override
+    public Set<Taxi> findAllTaxi() {
+        return readTaxi.getAllTaxies();
     }
 
 }
