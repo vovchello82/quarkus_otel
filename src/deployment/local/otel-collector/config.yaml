@@ -1,0 +1,37 @@
+receivers:
+ otlp:
+   protocols:
+     http:
+       endpoint: 0.0.0.0:4318
+     grpc:
+       endpoint: 0.0.0.0:4317
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 256
+  batch:
+   timeout: 1s
+  resource:
+    attributes:
+     - key: environment 
+       value: "local"
+       action: insert
+exporters:
+ logging:
+   loglevel: info
+ jaeger:
+   endpoint: jaeger:14250
+   tls:   
+    insecure: true
+extensions:
+ health_check:
+ pprof:
+   endpoint: :1888
+service:
+ extensions: [pprof, health_check]
+ pipelines:
+   traces:
+     receivers: [otlp]
+     processors: [batch, resource]
+     exporters: [logging, jaeger]
