@@ -1,6 +1,7 @@
 package de.vovchello.quarkus.internal.taxifinder.api;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import de.vovchello.quarkus.internal.db.api.Taxi;
@@ -11,4 +12,6 @@ public interface TaxiFinder {
     Collection<Taxi> findAvailableTaxi();
 
     Set<Taxi> findAllTaxi();
+
+    Optional<Taxi> findTaxiById(String id);
 }

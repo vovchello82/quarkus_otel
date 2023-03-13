@@ -1,6 +1,7 @@
 package de.vovchello.quarkus.internal.taxifinder.internal;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,11 @@ class TaxiFinderService implements TaxiFinder {
     @Override
     public Set<Taxi> findAllTaxi() {
         return readTaxi.getAllTaxies();
+    }
+
+    @Override
+    public Optional<Taxi> findTaxiById(String id) {
+        return readTaxi.getTaxiById(id);
     }
 
 }
