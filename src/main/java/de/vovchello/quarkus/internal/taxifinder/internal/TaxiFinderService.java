@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import org.jboss.logging.Logger;
 
 import de.vovchello.quarkus.internal.db.api.ReadTaxi;
 import de.vovchello.quarkus.internal.db.api.Taxi;
@@ -13,6 +16,9 @@ import de.vovchello.quarkus.internal.taxifinder.api.TaxiFinder;
 
 @Dependent
 class TaxiFinderService implements TaxiFinder {
+    @Inject
+    Logger logger;
+
     private final ReadTaxi readTaxi;
 
     public TaxiFinderService(ReadTaxi readTaxi) {
@@ -32,6 +38,7 @@ class TaxiFinderService implements TaxiFinder {
 
     @Override
     public Set<Taxi> findAllTaxi() {
+        logger.info("findAllTaxi");
         return readTaxi.getAllTaxies();
     }
 

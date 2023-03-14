@@ -7,14 +7,20 @@ import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.jboss.logging.Logger;
+import org.jboss.logging.MDC;
+
 import de.vovchello.quarkus.internal.db.api.ReadTaxi;
 import de.vovchello.quarkus.internal.db.api.Taxi;
 import de.vovchello.quarkus.internal.db.api.WriteTaxi;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import io.quarkus.runtime.Startup;
 
 @Startup
 @ApplicationScoped
 class TaxiInMemoryDb implements ReadTaxi, WriteTaxi {
+    private final static Logger LOGGER = Logger.getLogger(TaxiInMemoryDb.class);
+
     private Map<String, Taxi> db = new HashMap<>();
 
     TaxiInMemoryDb() {
@@ -27,8 +33,16 @@ class TaxiInMemoryDb implements ReadTaxi, WriteTaxi {
     }
 
     @Override
+    @WithSpan
     public Optional<Taxi> getTaxiById(String id) {
-        return Optional.ofNullable(db.get(id));
+        try {
+            MDC.put("itemId", id);
+
+            LOGGER.infof("get item by id %s", id);
+            return Optional.ofNullable(db.get(id));
+        } finally {
+            MDC.remove("itemId");
+        }
     }
 
     @Override
@@ -39,6 +53,7 @@ class TaxiInMemoryDb implements ReadTaxi, WriteTaxi {
 
     @Override
     public Set<Taxi> getAllTaxies() {
+        LOGGER.infof("get all items");
         return Set.copyOf(db.values());
     }
 

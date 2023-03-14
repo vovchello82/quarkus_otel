@@ -1,25 +1,39 @@
 receivers:
- otlp:
-   protocols:
-     http:
-       endpoint: 0.0.0.0:4318
-     grpc:
-       endpoint: 0.0.0.0:4317
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+  filelog:
+    include: [ /tmp/*.log ]
+    operators:
+      - type: json_parser       
+        timestamp:
+          parse_from: attributes.timestamp
+          layout: '%Y-%m-%dT%H:%M:%S.%LZ'
 processors:
   memory_limiter:
     check_interval: 1s
     limit_mib: 512
     spike_limit_mib: 256
   batch:
-   timeout: 1s
-  resource:
-    attributes:
-     - key: environment 
-       value: "local"
-       action: insert
+    timeout: 5s
+    send_batch_max_size: 1000
+    send_batch_size: 100
+  attributes:
+    actions:
+    - action: insert
+      key: log_file_name
+      from_attribute: log.file.name
+    - action: insert
+      key: loki.attribute.labels
+      value: log_file_name
 exporters:
  logging:
    loglevel: info
+ loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"   
  jaeger:
    endpoint: jaeger:14250
    tls:   
@@ -31,7 +45,11 @@ extensions:
 service:
  extensions: [pprof, health_check]
  pipelines:
-   traces:
-     receivers: [otlp]
-     processors: [batch, resource]
-     exporters: [logging, jaeger]
+  logs:
+    receivers: [filelog]
+    processors: [batch, attributes]
+    exporters: [logging, loki]
+  traces:
+    receivers: [otlp]
+    processors: [batch]
+    exporters: [logging, jaeger]
