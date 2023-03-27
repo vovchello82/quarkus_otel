@@ -56,7 +56,7 @@
             "uid": "P982945308D3682D1"
           },
           "editorMode": "builder",
-          "expr": "{exporter=\"OTLP\"} |= `ERROR` | json | line_format `{{.attributes_mdc_traceId}} {{.attributes_message}}`",
+          "expr": "{exporter=\"OTLP\"} |= `ERROR` |= `${traceId}` | json | line_format `{{.attributes_mdc_traceId}} {{.attributes_message}}`",
           "queryType": "range",
           "refId": "A"
         }
@@ -108,10 +108,32 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": "traceId",
+        "hide": 0,
+        "label": "traceId",
+        "name": "traceId",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
