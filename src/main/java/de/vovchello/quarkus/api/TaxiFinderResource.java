@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,5 +33,12 @@ public class TaxiFinderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTaxiById(@PathParam("id") String id) {
         return taxiFinder.findTaxiById(id).map(t -> Response.ok(t).build()).orElse(Response.noContent().build());
+    }
+
+    @GET
+    @Path("query")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTaxiByName(@QueryParam("name") String name) {
+        return taxiFinder.findTaxiByName(name).map(t -> Response.ok(t).build()).orElse(Response.noContent().build());
     }
 }

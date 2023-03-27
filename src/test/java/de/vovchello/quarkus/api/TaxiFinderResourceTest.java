@@ -27,12 +27,12 @@ class TaxiFinderResourceTest {
             new Taxi("2", "tax2", true)));
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Mockito.when(readTaxi.getAllTaxies()).thenReturn(db);
     }
 
     @Test
-    public void testGetTaxiEndpointOk() {
+    void testGetTaxiEndpointOk() {
         Taxi[] taxis = given()
                 .when().get("/taxi")
                 .then()
@@ -44,7 +44,7 @@ class TaxiFinderResourceTest {
     }
 
     @Test
-    public void testGetTaxiByIdEndpointOk() {
+    void testGetTaxiByIdEndpointOk() {
         Mockito.when(readTaxi.getTaxiById(any())).thenReturn(db.stream().findAny());
         given()
                 .when().get("/taxi/{id}", "X")
@@ -53,9 +53,17 @@ class TaxiFinderResourceTest {
     }
 
     @Test
-    public void testGetTaxiByIdEndpointNotOk() {
+    void testGetTaxiByIdEndpointNotOk() {
         given()
                 .when().get("/taxi/{id}", "abc")
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    void findTaxiNameContains() {
+        given().params("name", "bla")
+                .when().get("/taxi/query")
                 .then()
                 .statusCode(204);
     }

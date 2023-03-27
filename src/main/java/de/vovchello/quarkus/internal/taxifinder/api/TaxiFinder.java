@@ -16,4 +16,6 @@ public interface TaxiFinder {
     Set<Taxi> findAllTaxi();
 
     Optional<Taxi> findTaxiById(String id);
+
+    Optional<Taxi> findTaxiByName(String name);
 }

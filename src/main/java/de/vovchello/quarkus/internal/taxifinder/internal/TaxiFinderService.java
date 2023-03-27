@@ -47,4 +47,9 @@ class TaxiFinderService implements TaxiFinder {
         return readTaxi.getTaxiById(id);
     }
 
+    @Override
+    public Optional<Taxi> findTaxiByName(String name) {
+        logger.info("findTaxiByName");
+        return readTaxi.getTaxiByName(name);
+    }
 }
