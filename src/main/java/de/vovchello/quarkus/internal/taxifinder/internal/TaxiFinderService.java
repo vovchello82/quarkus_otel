@@ -32,8 +32,9 @@ class TaxiFinderService implements TaxiFinder {
 
     @Override
     public Collection<Taxi> findAvailableTaxi() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAvailableTaxi'");
+        return readTaxi.getAllTaxies().stream()
+                .filter(t -> t.isAvailable && (t.order == null || t.order.isEmpty()))
+                .collect(Collectors.toSet());
     }
 
     @Override

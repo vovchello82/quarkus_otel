@@ -1,14 +1,18 @@
 package de.vovchello.quarkus.internal.db.api;
 
+import java.util.Optional;
+
 public class Taxi {
     public String id;
     public String name;
     public Boolean isAvailable;
+    public Optional<Order> order;
 
     public Taxi(String id, String name, Boolean isAvailable) {
         this.id = id;
         this.name = name;
         this.isAvailable = isAvailable;
+        this.order = Optional.empty();
     }
 
     @Override

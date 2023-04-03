@@ -15,6 +15,10 @@ services:
     ports:
       - 3100:3100
     command: -config.file=/etc/loki/local-config.yaml
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
 
   grafana:
     image: grafana/grafana
@@ -62,6 +66,8 @@ services:
 
   application:
     image: vovchello/quarkus-otel:latest
+    depends_on:
+      - redis
     environment:
       - QUARKUS_LOG_FILE_PATH=/tmp/application.log
     volumes:
