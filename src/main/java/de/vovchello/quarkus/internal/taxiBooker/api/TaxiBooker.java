@@ -1,4 +1,4 @@
-package de.vovchello.quarkus.internal.taxiBooker.api;
+package de.vovchello.quarkus.internal.taxibooker.api;
 
 import java.util.Optional;
 

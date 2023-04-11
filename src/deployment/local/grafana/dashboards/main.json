@@ -93,7 +93,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "{exporter=\"OTLP\"} | json | label_format level=attributes_level | label_format spanId=mdc_spanId | line_format `{{.body}}` | json | line_format `{{.loggerName}} {{.message}}`",
+          "expr": "{exporter=\"OTLP\"} |= `${traceId}` | json | label_format level=attributes_level | label_format spanId=mdc_spanId | line_format `{{.body}}` | json | line_format `{{.loggerName}} {{.message}}`",
           "queryType": "range",
           "refId": "A"
         }

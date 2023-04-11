@@ -57,8 +57,13 @@
     <dependency>    
       <groupId>io.opentelemetry.instrumentation</groupId>
       <artifactId>opentelemetry-instrumentation-annotations</artifactId>
-      <version>1.23.0</version>
+      <version>1.24.0</version>
     </dependency>
+<dependency>
+    <groupId>io.opentelemetry</groupId>
+    <artifactId>opentelemetry-context</artifactId>
+    <version>1.24.0</version>
+</dependency>
     <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-logging-json</artifactId>

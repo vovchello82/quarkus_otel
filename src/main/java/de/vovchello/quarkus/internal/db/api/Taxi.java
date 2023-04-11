@@ -3,10 +3,10 @@ package de.vovchello.quarkus.internal.db.api;
 import java.util.Optional;
 
 public class Taxi {
-    public String id;
-    public String name;
-    public Boolean isAvailable;
-    public Optional<Order> order;
+    private String id;
+    private String name;
+    private Boolean isAvailable;
+    private Optional<Order> order;
 
     public Taxi(String id, String name, Boolean isAvailable) {
         this.id = id;
@@ -17,7 +17,39 @@ public class Taxi {
 
     @Override
     public String toString() {
-        return "Taxi [id=" + id + ", name=" + name + ", isAvailable=" + isAvailable + "]";
+        return "Taxi [id=" + id + ", name=" + name + ", isAvailable=" + isAvailable + ", order=" + order + "]";
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    public Optional<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(Optional<Order> order) {
+        this.order = order;
     }
 
     @Override

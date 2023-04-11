@@ -27,13 +27,14 @@ class TaxiFinderService implements TaxiFinder {
 
     @Override
     public Collection<Taxi> findTaxiByNameContains(String searchedText) {
-        return readTaxi.getAllTaxies().stream().filter(t -> t.name.contains(searchedText)).collect(Collectors.toSet());
+        return readTaxi.getAllTaxies().stream().filter(t -> t.getName().contains(searchedText))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Collection<Taxi> findAvailableTaxi() {
         return readTaxi.getAllTaxies().stream()
-                .filter(t -> t.isAvailable && (t.order == null || t.order.isEmpty()))
+                .filter(t -> t.getIsAvailable() && (t.getOrder() == null || t.getOrder().isEmpty()))
                 .collect(Collectors.toSet());
     }
 

@@ -1,9 +1,12 @@
 package de.vovchello.quarkus.internal.db.internal;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -21,15 +24,18 @@ import io.quarkus.runtime.Startup;
 class TaxiInMemoryDb implements ReadTaxi, WriteTaxi {
     private final static Logger LOGGER = Logger.getLogger(TaxiInMemoryDb.class);
 
-    private Map<String, Taxi> db = new HashMap<>();
+    private Map<String, Taxi> db = new ConcurrentHashMap<>();
+
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     TaxiInMemoryDb() {
+        LOGGER.info("creation");
         Taxi taxi1 = new Taxi("1", "taxi1", true);
-        db.put(taxi1.id, taxi1);
+        db.put(taxi1.getId(), taxi1);
         Taxi taxi2 = new Taxi("2", "taxi2", true);
-        db.put(taxi2.id, taxi2);
+        db.put(taxi2.getId(), taxi2);
         Taxi taxi3 = new Taxi("3", "taxi3", false);
-        db.put(taxi3.id, taxi3);
+        db.put(taxi3.getId(), taxi3);
     }
 
     @Override
@@ -58,21 +64,32 @@ class TaxiInMemoryDb implements ReadTaxi, WriteTaxi {
     }
 
     @Override
-    public synchronized void addTaxi(Taxi taxi) {
-        db.putIfAbsent(taxi.id, taxi);
+    public void addTaxi(Taxi taxi) {
+        db.putIfAbsent(taxi.getId(), taxi);
     }
 
     @Override
-    public synchronized void updateTaxi(Taxi taxi) {
-        if (db.containsKey(taxi.id)) {
-            db.put(taxi.id, taxi);
+    public void updateTaxi(Taxi taxi) {
+        LOGGER.infof("update taxi %s", taxi);
+        if (db.containsKey(taxi.getId())) {
+            db.put(taxi.getId(), taxi);
         }
     }
 
     @Override
-    public synchronized void deleteTaxiById(String id) {
+    public void deleteTaxiById(String id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteTaxiById'");
+    }
+
+    @Override
+    public WriteLock getWriteLock() {
+        return lock.writeLock();
+    }
+
+    @Override
+    public ReadLock getReadLock() {
+        return lock.readLock();
     }
 
 }
