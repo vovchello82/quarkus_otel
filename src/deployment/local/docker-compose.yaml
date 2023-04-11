@@ -76,5 +76,13 @@ services:
       - 9090:9090
     profiles:
       - all
+
+  order-manager:
+    image: vovchello/order-manager
+    depends_on:
+      - redis
+    profiles:
+      - all
+
 volumes:
   logs:
